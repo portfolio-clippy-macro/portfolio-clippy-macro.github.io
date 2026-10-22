@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Portfolio Clippy Macro · Morning Briefing · October 22, 2026
+  </title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+  /* ── MACRO BRIEFING · "DASHBOARD PRO" ───────────────────────────────────
+     Re-imagines the Strivepoint morning memo in the same language as the
+     portfolio weekly V4. Screen-first. Strivepoint teal is the brand anchor.
+     Macro data is re-expressed as purpose-built visuals:
+       · Risk-regime hero + sentiment needle   · Asset board heatmap (tinted by signal)
+       · Cross-asset cascade diagram           · Two-sided week-ahead scenarios
+     P&L / move palette CVD-validated; color never alone (every mark carries a number). */
+  :root {
+    --bg: #F4F3EF;
+    --card: #FFFFFF;
+    --ink: #10201F; --ink2: #3B4B4A; --ink3: #6A7877; --ink4: #9AA6A5;
+    --line: #E6E5DF; --line2: #F0EFE9;
+    --teal: #244F4D; --teal2: #2F6B67; --teal-bg: #EAF2F1;
+    --up: #0E9F6E; --up-bg: #E6F6EF; --up-line: #B6E6D2;
+    --dn: #E02D3C; --dn-bg: #FBE9EB; --dn-line: #F4C4C9;
+    --warn: #B45309; --warn-bg: #FBF0DF;
+    --crit: #D01F32;
+    --gold: #B8860B;
+    --r: 18px; --shadow: 0 1px 2px rgba(16,32,31,0.04), 0 10px 30px -14px rgba(16,32,31,0.16);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); scroll-behavior: smooth; }
+  body {
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.6;
+    background:
+      radial-gradient(1100px 460px at 100% -8%, #E1EDEC 0%, transparent 55%),
+      radial-gradient(820px 380px at -8% 3%, #F3ECDD 0%, transparent 52%),
+      var(--bg);
+    color: var(--ink2); max-width: 1080px; margin: 0 auto; padding: 0 24px 90px;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+  .up { color: var(--up); } .dn { color: var(--dn); } .wn { color: var(--warn); }
+  strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Nav ── */
+  .nav {
+    position: sticky; top: 12px; z-index: 60; display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.84); backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow);
+    border-radius: 999px; padding: 7px 9px; margin: 16px 0 30px;
+  }
+  .nav .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 13px; color: var(--teal); padding: 4px 12px 4px 6px; letter-spacing: 0.02em; }
+  .nav .logo .mark { width: 24px; height: 24px; border-radius: 8px; background: linear-gradient(135deg, #10201F, #2F6B67 90%); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; }
+  .nav a { font-size: 12.5px; font-weight: 600; color: var(--ink3); text-decoration: none; padding: 7px 13px; border-radius: 999px; white-space: nowrap; }
+  .nav a:hover { background: var(--teal-bg); color: var(--teal); }
+  .nav .stamp { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink4); padding-right: 10px; white-space: nowrap; }
+
+  /* ── Masthead ── */
+  .masthead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .masthead .wm { font-size: 26px; font-weight: 800; color: var(--teal); letter-spacing: -0.01em; }
+  .masthead .wm .cap { font-weight: 500; color: var(--ink3); font-size: 14px; display: block; letter-spacing: 0; margin-top: 2px; }
+  .masthead .conf { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--ink4); text-transform: uppercase; text-align: right; }
+
+  /* ── Hero bento ── */
+  .hero { display: grid; grid-template-columns: 1.55fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; box-shadow: var(--shadow); position: relative; }
+  .tile .tk { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink4); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .tile-regime { grid-row: span 2; background: radial-gradient(140% 120% at 100% 0%, #2C605C 0%, #16302E 62%); color: #fff; border: none; display: flex; flex-direction: column; overflow: hidden; }
+  .tile-regime::after { content: ""; position: absolute; right: -50px; top: -50px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(224,45,60,0.28), transparent 70%); }
+  .tile-regime .tk { color: #9FB8B5; }
+  .regime-word { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; margin: 2px 0 8px; color: #fff; display: flex; align-items: center; gap: 12px; }
+  .regime-word .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--dn); box-shadow: 0 0 14px var(--dn); flex-shrink: 0; }
+  .regime-read { font-size: 14px; color: #CFDDDB; line-height: 1.6; max-width: 42ch; position: relative; }
+  .regime-read strong { color: #fff; }
+  /* sentiment needle */
+  .needle { margin-top: auto; padding-top: 22px; position: relative; }
+  .needle .track { height: 10px; border-radius: 6px; background: linear-gradient(90deg, #E02D3C 0%, #E9A23B 50%, #0E9F6E 100%); position: relative; }
+  .needle .mark { position: absolute; top: -4px; width: 4px; height: 18px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 3px rgba(0,0,0,0.25); }
+  .needle .ends { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.06em; color: #9FB8B5; margin-top: 7px; text-transform: uppercase; }
+
+  .tile .v { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .tile .s { font-size: 12px; color: var(--ink3); margin-top: 4px; font-weight: 500; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .pill.g { background: var(--up-bg); color: var(--up); } .pill.r { background: var(--dn-bg); color: var(--dn); } .pill.a { background: var(--warn-bg); color: var(--warn); }
+  .gauge { height: 7px; border-radius: 4px; background: var(--line); margin-top: 12px; overflow: hidden; }
+  .gauge i { display: block; height: 100%; border-radius: 4px; }
+  /* diverging 24h-move gauge: fill grows from the center zero-line, left = down, right = up,
+     scaled so the track edges are +/-7%. The bar length is the actual 24h % move. */
+  .mgauge { position: relative; height: 8px; border-radius: 4px; background: var(--line); margin: 12px 0 5px; }
+  .mgauge .zero { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: var(--ink3); border-radius: 2px; transform: translateX(-50%); }
+  .mgauge i { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--teal); }
+  .mcap { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.02em; color: var(--ink4); }
+  .mcap .mid { color: var(--ink3); font-weight: 600; }
+
+  /* ── Section heads ── */
+  .shead { display: flex; align-items: center; gap: 10px; margin: 0 4px 16px; }
+  .shead .no { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--teal); background: var(--teal-bg); width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
+  .shead h2 { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .shead .sub { font-size: 12.5px; color: var(--ink4); margin-left: auto; text-align: right; }
+  section { margin-bottom: 46px; scroll-margin-top: 80px; }
+
+  /* ── Exec summary (impact-weighted) ── */
+  .exec { display: flex; flex-direction: column; gap: 10px; }
+  .impact { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); display: flex; overflow: hidden; }
+  .impact .rail { display: none; }
+  .impact.crit .rail { background: var(--crit); } .impact.high .rail { background: var(--warn); } .impact.pos .rail { background: var(--up); }
+  .impact .body { padding: 14px 18px; flex: 1; }
+  .impact .top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sev { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 6px; color: #fff; }
+  .sev.crit { background: var(--crit); } .sev.high { background: var(--warn); } .sev.pos { background: var(--up); }
+  .impact .hl { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .impact.crit .hl { color: var(--crit); } .impact.high .hl { color: #96490A; } .impact.pos .hl { color: #0A7350; }
+  .cascade-line { font-size: 12.5px; color: var(--ink3); margin-top: 5px; }
+  .cascade-line .arr { color: var(--teal); font-weight: 700; }
+  .cascade-line b { color: var(--ink2); font-weight: 600; }
+
+  /* ── Cascade diagram ── */
+  .casc { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 24px 26px; }
+  .casc-flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .casc-trigger { background: var(--dn); color: #fff; border-radius: 12px; padding: 11px 18px; font-weight: 700; font-size: 14px; text-align: center; box-shadow: 0 8px 20px -10px rgba(224,45,60,0.6); }
+  .casc-trigger .t2 { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; opacity: 0.85; margin-top: 2px; letter-spacing: 0.04em; }
+  .connector { width: 2px; height: 22px; background: var(--dn-line); position: relative; }
+  .connector::after { content: ""; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--dn-line); }
+  .casc-first { background: linear-gradient(135deg, #FFF6F1, #FFEDE6); border: 1.5px solid #F3C9B4; border-radius: 12px; padding: 12px 20px; text-align: center; }
+  .casc-first .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--warn); }
+  .casc-first .big { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #B0400E; margin-top: 2px; }
+  /* Connector geometry (4 equal cards, 12px gaps): the rail spans exactly between the
+     outer card centers (half a card in from each edge = 12.5% - 4.5px), so every card's
+     center stub lands cleanly on it. Trunk drops from the Brent box to the rail center. */
+  .casc-fan { display: flex; align-items: flex-start; gap: 12px; margin-top: 0; flex-wrap: nowrap; justify-content: center; position: relative; padding-top: 42px; width: 100%; }
+  .casc-fan::after { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 22px; background: var(--line); }
+  .casc-fan::before { content: ""; position: absolute; top: 22px; left: calc(12.5% - 4.5px); right: calc(12.5% - 4.5px); height: 2px; background: var(--line); }
+  .effect { background: var(--card); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; text-align: center; flex: 1 1 0; min-width: 0; position: relative; }
+  .effect::before { content: ""; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 2px; height: 20px; background: var(--line); }
+  .effect .en { font-size: 11px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.04em; }
+  .effect .ev { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; margin-top: 3px; }
+  .effect .ed { font-size: 10.5px; color: var(--ink4); margin-top: 2px; }
+  .casc-note { text-align: center; font-size: 11.5px; color: var(--ink4); margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line2); }
+
+  /* ── Asset board heatmap ── */
+  .board-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .bgroup { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 16px 18px; }
+  .bgroup h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .bgroup h3::after { content: ""; flex: 1; height: 1px; background: var(--line2); }
+  /* columns: name | level | 24h | ytd | signal. Signal is a FIXED width (not auto) so the
+     fr columns compute identically across the header and every row, keeping numbers aligned. */
+  .bhead { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 0.8fr 78px; gap: 8px; padding: 0 11px 7px; border: 1px solid transparent; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink4); }
+  .bhead span:nth-child(2), .bhead span:nth-child(3), .bhead span:nth-child(4) { text-align: right; }
+  .brow { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 0.8fr 78px; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 10px; margin-bottom: 5px; border: 1px solid transparent; }
+  .brow:last-child { margin-bottom: 0; }
+  .brow.off { background: var(--dn-bg); border-color: var(--dn-line); }
+  .brow.on { background: var(--up-bg); border-color: var(--up-line); }
+  .brow.neu { background: var(--line2); }
+  .brow.warnr { background: var(--warn-bg); border-color: #F0D9B0; }
+  .brow .bn { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .brow .bl { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 600; color: var(--ink); text-align: right; }
+  .brow .bc { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-align: right; }
+  .brow .by { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: right; }
+  .sigchip { justify-self: end; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 6px; border-radius: 5px; white-space: nowrap; text-transform: uppercase; }
+  .sigchip.off { background: var(--dn); color: #fff; } .sigchip.on { background: var(--up); color: #fff; } .sigchip.neu { background: var(--ink4); color: #fff; } .sigchip.warnr { background: var(--warn); color: #fff; }
+  .board-legend { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 11px; color: var(--ink3); padding: 4px 6px 0; }
+  .board-legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+
+  /* ── Why moved ── */
+  .why { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 8px 22px; }
+  .whyrow { display: flex; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--line2); align-items: flex-start; }
+  .whyrow:last-child { border-bottom: none; }
+  .whyrow .cause { flex: 0 0 200px; font-weight: 700; color: var(--ink); font-size: 13.5px; line-height: 1.45; }
+  .whyrow .arrowcol { color: var(--teal); font-weight: 700; flex-shrink: 0; padding-top: 1px; }
+  .whyrow .effecttext { flex: 1; font-size: 13px; line-height: 1.6; color: var(--ink2); }
+
+  /* ── Macro driver cards ── */
+  .driver { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 14px; }
+  .driver .dh { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .driver .dnum { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--teal2); flex-shrink: 0; }
+  .driver .dtitle { font-size: 15.5px; font-weight: 700; color: var(--ink); line-height: 1.4; letter-spacing: -0.01em; }
+  .driver .sowhat { list-style: none; padding: 0; margin: 0 0 14px; }
+  .driver .sowhat li { position: relative; padding: 5px 0 5px 20px; font-size: 13px; line-height: 1.65; color: var(--ink2); }
+  .driver .sowhat li::before { content: ""; position: absolute; left: 4px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--teal2); }
+  .xasset { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 14px; background: var(--teal-bg); border-radius: 10px; font-size: 12px; }
+  .xasset .xl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); }
+  .xchip { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 7px; background: #fff; border: 1px solid var(--line); color: var(--ink2); }
+  .xchip.up { color: var(--up); border-color: var(--up-line); } .xchip.dn { color: var(--dn); border-color: var(--dn-line); }
+
+  /* ── Week ahead (two-sided) ── */
+  .week { display: flex; flex-direction: column; gap: 14px; }
+  .wk { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+  .wk-head { display: flex; align-items: center; gap: 12px; padding: 15px 20px; flex-wrap: wrap; }
+  .wk-date { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #fff; background: var(--teal); padding: 4px 10px; border-radius: 8px; letter-spacing: 0.03em; }
+  .wk-date.ongoing { background: var(--warn); }
+  .wk-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; flex: 1; min-width: 200px; }
+  .wk-scen { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); }
+  .scen { padding: 13px 20px; font-size: 12.5px; line-height: 1.55; }
+  .scen.bull { background: var(--up-bg); }
+  .scen.bear { background: var(--dn-bg); border-left: 1px solid var(--line); }
+  .scen .sl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .scen.bull .sl { color: var(--up); } .scen.bear .sl { color: var(--dn); }
+  .scen .st { color: var(--ink2); }
+
+  /* ── Sector trades ── */
+  .sectors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sec-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 18px 20px; display: flex; flex-direction: column; }
+  .sec-card .tag { align-self: flex-start; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #fff; background: var(--teal); padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .sec-card .sh { font-size: 13.5px; font-weight: 700; color: var(--ink); line-height: 1.45; margin-bottom: 12px; }
+  .sec-card .trade { font-size: 12px; line-height: 1.6; color: var(--ink2); background: var(--teal-bg); border-radius: 10px; padding: 11px 13px; margin-top: auto; }
+  .sec-card .trade .tl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); display: block; margin-bottom: 3px; }
+
+  .footer { margin-top: 44px; font-size: 11px; color: var(--ink4); line-height: 1.9; border-top: 1px solid var(--line); padding-top: 16px; }
+  .footer b { color: var(--ink3); }
+  .footer .disc { margin-top: 10px; font-style: italic; font-size: 10px; color: var(--ink4); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr 1fr; }
+    .tile-regime { grid-column: span 2; grid-row: auto; }
+    .board-groups, .sectors { grid-template-columns: 1fr; }
+    .wk-scen { grid-template-columns: 1fr; }
+    .scen.bear { border-left: none; border-top: 1px solid var(--line); }
+    .nav a { display: none; }
+    .nav .stamp { margin-left: auto; }
+  }
+
+  /* ── PRINT / PDF (WeasyPrint) ─────────────────────────────
+     The design above is screen-first; these rules make it paginate
+     as a clean multi-page Letter PDF. Placed last so they win over
+     the max-width:900px screen query when WeasyPrint renders. */
+  @page {
+    size: Letter;
+    margin: 0.55in 0.5in 0.5in;
+  }
+  @page {
+    @bottom-left {
+      content: "PRIVILEGED AND CONFIDENTIAL  |  For authorized recipients only";
+      font-family: 'JetBrains Mono', monospace; font-size: 7pt; color: #9AA6A5;
+    }
+    @bottom-right {
+      content: "Page " counter(page);
+      font-family: 'JetBrains Mono', monospace; font-size: 7pt; color: #9AA6A5;
+    }
+  }
+  @media print {
+    html { background: #F4F3EF; }
+    body {
+      max-width: none; margin: 0; padding: 0;
+      background: #F4F3EF;            /* flat fill — drop multi-page radial gradients */
+      font-size: 10.5px;
+    }
+    .nav { display: none !important; }   /* sticky nav is screen-only */
+    .masthead { margin-bottom: 12px; }
+    section { margin-bottom: 20px; scroll-margin-top: 0; }
+    .shead { margin-bottom: 12px; break-after: avoid; page-break-after: avoid; }
+    /* keep every card whole across page breaks */
+    .tile, .impact, .casc, .bgroup, .driver, .wk, .sec-card, .whyrow, .footer {
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    /* explicit print columns (override the 900px collapse for predictability) */
+    .hero { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .tile-regime { grid-column: span 2; grid-row: auto; }
+    .board-groups { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .sectors { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style></head>
+<body data-palette="#0E9F6E,#244F4D,#B45309,#E02D3C">
+<nav class="nav"><span class="logo"><span class="mark">PC</span>Portfolio Clippy Macro</span><a href="#exec">Summary</a><a href="#cascade">Cascade</a><a href="#board">Board</a><a href="#moved">Why Moved</a><a href="#drivers">Drivers</a><a href="#week">Week Ahead</a><a href="#sectors">Sectors</a><span class="stamp">THU · OCT 22 2026</span></nav>
+<div class="masthead"><div class="wm">Portfolio Clippy Macro<span class="cap">Morning Intelligence Briefing · Thursday, October 22, 2026 · data as of the morning open</span></div><div class="conf">Privileged &amp; Confidential<br>For authorized recipients only</div></div>
+<div class="hero"><div class="tile tile-regime"><div class="tk">Market Regime Today</div><div class="regime-word"><span class="dot" style="background:var(--up);box-shadow:0 0 14px var(--up);"></span>Risk-On</div><div class="regime-read"><strong>Equity breadth is firm while investors reward AI revenue evidence.</strong> The <strong>Nasdaq 100 gained 1.13%</strong>, but elevated oil and unavailable rate data warrant selectivity.</div><div class="needle"><div class="track"><span class="mark" style="left:68%"></span></div><div class="ends"><span>Risk-off</span><span>Neutral</span><span>Risk-on</span></div></div></div><div class="tile"><div class="tk">Nasdaq 100 <span class="pill g">AI bid</span></div><div class="v">29,822.52</div><div class="s up" style="font-weight:700;">+1.13% · 24h</div><div class="mgauge"><span class="zero"></span><i style="left:50%;width:8%;"></i></div><div class="mcap"><span>-7%</span><span class="mid">24h move</span><span>+7%</span></div><div class="s">+18.31% YTD · leadership intact</div></div><div class="tile"><div class="tk">WTI Crude <span class="pill r">Volatile</span></div><div class="v">$97.15</div><div class="s dn" style="font-weight:700;">-4.56% · 24h</div><div class="mgauge"><span class="zero"></span><i style="right:50%;width:33%;background:var(--dn);"></i></div><div class="mcap"><span>-7%</span><span class="mid">24h move</span><span>+7%</span></div><div class="s">+69.49% YTD · premium remains</div></div><div class="tile"><div class="tk">VIX <span class="pill g">Easing</span></div><div class="v">16.68</div><div class="s dn" style="font-weight:700;">-3.64% · 24h</div><div class="mgauge"><span class="zero"></span><i style="right:50%;width:26%;background:var(--dn);"></i></div><div class="mcap"><span>-7%</span><span class="mid">24h move</span><span>+7%</span></div><div class="s">+14.96% YTD · near-term stress fades</div></div><div class="tile"><div class="tk">Brent <span class="pill a">Elevated</span></div><div class="v">$108.82</div><div class="s up" style="font-weight:700;">+0.03% · 24h</div><div class="mgauge"><span class="zero"></span><i style="left:50%;width:1%;"></i></div><div class="mcap"><span>-7%</span><span class="mid">24h move</span><span>+7%</span></div><div class="s">+79.13% YTD · shipping risk persists</div></div></div>
+<section id="exec"><div class="shead"><span class="no">1</span><h2>Executive Summary</h2><span class="sub">Impact-weighted · what moved and what it cascades into</span></div><div class="exec"><div class="impact crit"><div class="rail"></div><div class="body"><div class="top"><span class="sev crit">CRITICAL</span><span class="hl">Energy security premium remains embedded despite WTI’s 4.56% drop</span></div><div class="cascade-line"><span class="arr">↳ Cascades into:</span> elevated transport costs · <b>Brent at $108.82</b> · inflation-policy sensitivity</div></div></div><div class="impact high"><div class="rail"></div><div class="body"><div class="top"><span class="sev high">HIGH</span><span class="hl">AI returns face a financing test as capex ambitions accelerate</span></div><div class="cascade-line"><span class="arr">↳ Cascades into:</span> higher capital discipline · <b>Nasdaq 100 +1.13%</b> · data-center credit selectivity</div></div></div><div class="impact high"><div class="rail"></div><div class="body"><div class="top"><span class="sev high">HIGH</span><span class="hl">French 10Y yield at 5.01% revives European fiscal-risk focus</span></div><div class="cascade-line"><span class="arr">↳ Cascades into:</span> wider sovereign premia · duration caution · euro-area political scrutiny</div></div></div><div class="impact pos"><div class="rail"></div><div class="body"><div class="top"><span class="sev pos">POSITIVE</span><span class="hl">Broad equity gains accompany a 3.64% decline in VIX</span></div><div class="cascade-line"><span class="arr">↳ Cascades into:</span> <b>S&amp;P 500 +0.58%</b> · small-cap participation · selective risk appetite</div></div></div></div></section>
+<section id="cascade"><div class="shead"><span class="no">2</span><h2>Today’s Dominant Cascade</h2><span class="sub">One shock, traced across assets</span></div><div class="casc"><div class="casc-flow"><div class="casc-trigger">Middle East freight and security risk keeps oil’s inflation premium alive<span class="t2">Oil flows have recovered, but shipping constraints and attacks keep the risk premium elevated</span></div><div class="connector"></div><div class="casc-first"><div class="lbl">First-order move</div><div class="big">WTI -4.56% → $97.15</div></div><div class="casc-fan"><div class="effect"><div class="en">Brent</div><div class="ev up">$108.82</div><div class="ed">near five-month highs</div></div><div class="effect"><div class="en">Equities</div><div class="ev up">+1.13%</div><div class="ed">Nasdaq 100</div></div><div class="effect"><div class="en">Volatility</div><div class="ev dn">-3.64%</div><div class="ed">VIX at 16.68</div></div></div></div><div class="casc-note">Lower WTI without a break in Brent’s level suggests the tape is pricing reduced immediate stress, not a clean removal of the energy-security premium.</div></div></section>
+<section id="board"><div class="shead"><span class="no">3</span><h2>Asset Board</h2><span class="sub">Tile color = risk signal · not raw direction</span></div><div class="board-groups">
+<div class="bgroup"><h3>Equity Indices</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow on"><span class="bn">S&amp;P 500</span><span class="bl">7,757.17</span><span class="bc up">+0.58%</span><span class="by up">+13.10%</span><span class="sigchip on">RALLY</span></div><div class="brow on"><span class="bn">Nasdaq 100</span><span class="bl">29,822.52</span><span class="bc up">+1.13%</span><span class="by up">+18.31%</span><span class="sigchip on">RALLY</span></div><div class="brow on"><span class="bn">Russell 2000</span><span class="bl">2,781.02</span><span class="bc up">+0.27%</span><span class="by up">+10.88%</span><span class="sigchip on">RALLY</span></div></div>
+<div class="bgroup"><h3>Commodities</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow off"><span class="bn">WTI Crude</span><span class="bl">97.15</span><span class="bc dn">-4.56%</span><span class="by up">+69.49%</span><span class="sigchip off">RISK-OFF</span></div><div class="brow neu"><span class="bn">Brent Crude</span><span class="bl">108.82</span><span class="bc up">+0.03%</span><span class="by up">+79.13%</span><span class="sigchip neu">ELEVATED</span></div><div class="brow neu"><span class="bn">Gold</span><span class="bl">4,150.00</span><span class="bc up">+0.18%</span><span class="by dn">-4.15%</span><span class="sigchip neu">ELEVATED</span></div><div class="brow off"><span class="bn">Copper</span><span class="bl">6.54</span><span class="bc dn">-0.36%</span><span class="by up">+16.01%</span><span class="sigchip off">RISK-OFF</span></div></div>
+<div class="bgroup"><h3>Currencies</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow neu"><span class="bn">DXY</span><span class="bl">101.78</span><span class="bc up">+0.05%</span><span class="by up">+3.41%</span><span class="sigchip neu">ELEVATED</span></div><div class="brow neu"><span class="bn">EUR / USD</span><span class="bl">1.12</span><span class="bc up">+0.16%</span><span class="by dn">-4.30%</span><span class="sigchip neu">ELEVATED</span></div><div class="brow off"><span class="bn">USD / JPY</span><span class="bl">157.71</span><span class="bc dn">-0.35%</span><span class="by up">+0.62%</span><span class="sigchip off">RISK-OFF</span></div></div>
+<div class="bgroup"><h3>Rates &amp; Credit</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow neu"><span class="bn">10Y UST</span><span class="bl">N/A</span><span class="bc">—</span><span class="by">—</span><span class="sigchip neu">—</span></div><div class="brow neu"><span class="bn">2Y UST</span><span class="bl">N/A</span><span class="bc">—</span><span class="by">—</span><span class="sigchip neu">—</span></div><div class="brow neu"><span class="bn">5Y TIPS Breakeven</span><span class="bl">N/A</span><span class="bc">—</span><span class="by">—</span><span class="sigchip neu">—</span></div><div class="brow neu"><span class="bn">HY OAS</span><span class="bl">N/A</span><span class="bc">—</span><span class="by">—</span><span class="sigchip neu">—</span></div><div class="brow neu"><span class="bn">2s10s Spread</span><span class="bl">N/A</span><span class="bc">—</span><span class="by">—</span><span class="sigchip neu">—</span></div></div>
+<div class="bgroup"><h3>Volatility</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow on"><span class="bn">VIX</span><span class="bl">16.68</span><span class="bc dn">-3.64%</span><span class="by up">+14.96%</span><span class="sigchip on">EASING</span></div></div><div class="bgroup"><h3>Crypto</h3><div class="bhead"><span></span><span>Level</span><span>24h</span><span>YTD</span><span></span></div><div class="brow on"><span class="bn">Bitcoin</span><span class="bl">82,839.41</span><span class="bc dn">-0.12%</span><span class="by dn">-6.64%</span><span class="sigchip on">EASING</span></div></div><div class="board-legend"><span><i style="background:var(--dn-bg);border:1px solid var(--dn-line);"></i>Risk-off</span><span><i style="background:var(--up-bg);border:1px solid var(--up-line);"></i>Rally / easing</span><span><i style="background:var(--warn-bg);border:1px solid #F0D9B0;"></i>Volatile</span><span><i style="background:var(--line2);"></i>Neutral</span><span style="margin-left:auto;color:var(--ink4)">Columns: level · 24h move · YTD · signal. Source: Yahoo Finance &amp; FRED, morning of Oct 22, 2026. Indicative only.</span></div></div></section>
+<section id="moved"><div class="shead"><span class="no">4</span><h2>Why Markets Moved Yesterday</h2><span class="sub">Cause → effect</span></div><div class="why"><div class="whyrow"><div class="cause">AI earnings and merger optimism</div><div class="arrowcol">→</div><div class="effecttext">The <strong>Nasdaq 100 rose 1.13%</strong> to 29,822.52 as investors weighed SpaceX’s AI revenue and a possible Tesla tie-up.</div></div><div class="whyrow"><div class="cause">Oil’s near-term stress eased</div><div class="arrowcol">→</div><div class="effecttext"><strong>WTI fell 4.56%</strong> to $97.15 while Brent held at $108.82, leaving the energy-security premium elevated.</div></div><div class="whyrow"><div class="cause">Broader risk appetite held</div><div class="arrowcol">→</div><div class="effecttext">The <strong>S&amp;P 500 gained 0.58%</strong> and VIX fell 3.64% to 16.68 as volatility eased.</div></div></div></section>
+<section id="drivers"><div class="shead"><span class="no">5</span><h2>Macro &amp; Cross-Asset Drivers</h2><span class="sub">The five themes, and so what</span></div>
+<div class="driver"><div class="dh"><span class="dnum">01</span><span class="dtitle">Brent at $108.82 keeps the energy-security premium embedded</span></div><ul class="sowhat"><li>Recovered Gulf flows have not removed the shipping, insurance, and refinery risks that can prolong fuel inflation.</li><li>Energy-sensitive margins and policy expectations remain vulnerable if the premium becomes a new baseline.</li></ul><div class="xasset"><span class="xl">Cross-asset</span><span class="xchip up">Brent $108.82</span><span class="xchip dn">WTI -4.56%</span><span class="xchip">Inflation risk</span></div></div>
+<div class="driver"><div class="dh"><span class="dnum">02</span><span class="dtitle">Nasdaq 100 +1.13% tests AI monetization against $750B compute plans</span></div><ul class="sowhat"><li>SpaceX’s $7.6 billion of cloud-computing revenue offers a tangible return signal for AI infrastructure.</li><li>Anthropic’s reported compute commitments keep valuation and financing discipline central to the next leg.</li></ul><div class="xasset"><span class="xl">Cross-asset</span><span class="xchip up">Nasdaq +1.13%</span><span class="xchip">AI capex</span><span class="xchip">Credit selectivity</span></div></div>
+<div class="driver"><div class="dh"><span class="dnum">03</span><span class="dtitle">French 10Y yield at 5.01% signals renewed fiscal-premium risk</span></div><ul class="sowhat"><li>French political stress highlights the sensitivity of high-deficit sovereigns to a wary bond market.</li><li>European duration allocations need to distinguish idiosyncratic fiscal pressure from a broader funding shock.</li></ul><div class="xasset"><span class="xl">Cross-asset</span><span class="xchip">French 10Y 5.01%</span><span class="xchip">Euro fiscal risk</span><span class="xchip">Duration caution</span></div></div>
+<div class="driver"><div class="dh"><span class="dnum">04</span><span class="dtitle">VIX -3.64% and Russell 2000 +0.27% support a selective risk bid</span></div><ul class="sowhat"><li>Lower implied volatility supports participation beyond megacap technology without resolving macro uncertainty.</li><li>The tape remains selective because energy costs and unavailable rate data limit a full risk-on inference.</li></ul><div class="xasset"><span class="xl">Cross-asset</span><span class="xchip dn">VIX -3.64%</span><span class="xchip up">Russell +0.27%</span><span class="xchip">Selective beta</span></div></div>
+<div class="driver"><div class="dh"><span class="dnum">05</span><span class="dtitle">Data-center permitting vote follows 2.6°C global-warming warning</span></div><ul class="sowhat"><li>Permitting reform could accelerate transmission, but data-center power demand is creating bipartisan local resistance.</li><li>Grid investment remains a structural beneficiary if policy balances reliability, cost allocation, and emissions constraints.</li></ul><div class="xasset"><span class="xl">Cross-asset</span><span class="xchip">Grid capex</span><span class="xchip">Power demand</span><span class="xchip">Policy risk</span></div></div></section>
+<section id="week"><div class="shead"><span class="no">6</span><h2>Key Items This Week</h2><span class="sub">Each catalyst, both ways</span></div><div class="week"><div class="wk"><div class="wk-head"><span class="wk-date">THU · OCT 22</span><span class="wk-title">Procter &amp; Gamble earnings and consumer-spending read-through</span></div><div class="wk-scen"><div class="scen bull"><div class="sl">▲ Resilient demand</div><div class="st">Stable volumes and margins would ease concern about fuel-cost pass-through.</div></div><div class="scen bear"><div class="sl">▼ Cost pressure bites</div><div class="st">Weaker guidance would sharpen inflation and consumer-risk concerns.</div></div></div></div><div class="wk"><div class="wk-head"><span class="wk-date">SUN · OCT 25</span><span class="wk-title">Brazil presidential runoff</span></div><div class="wk-scen"><div class="scen bull"><div class="sl">▲ Decisive result</div><div class="st">A clear mandate could reduce near-term regional political uncertainty.</div></div><div class="scen bear"><div class="sl">▼ Contested outcome</div><div class="st">A narrow result could raise risk premiums and policy uncertainty.</div></div></div></div><div class="wk"><div class="wk-head"><span class="wk-date ongoing">ONGOING</span><span class="wk-title">Gulf shipping security and European fiscal response</span></div><div class="wk-scen"><div class="scen bull"><div class="sl">▲ Stress recedes</div><div class="st">Calmer shipping and fiscal signals could compress energy and sovereign premia.</div></div><div class="scen bear"><div class="sl">▼ Risk broadens</div><div class="st">A renewed disruption could sustain inflation hedges and quality demand.</div></div></div></div></div></section>
+<section id="sectors"><div class="shead"><span class="no">7</span><h2>Sector &amp; Thematic Deep Dives</h2><span class="sub">Where the themes become trades</span></div><div class="sectors"><div class="sec-card"><span class="tag">Defense &amp; Aerospace</span><div class="sh">Security concerns around Ukraine and air-defense infrastructure keep demand for resilient platforms in focus.</div><div class="trade"><span class="tl">Trade</span>Use ITA or LMT for risk-sized exposure to defense modernization.</div></div><div class="sec-card"><span class="tag">Biotech / Pharma</span><div class="sh">Roche’s breast-cancer pill highlights ongoing oncology pipeline differentiation in a competitive market.</div><div class="trade"><span class="tl">Trade</span>Use RHHBY or IBB for diversified exposure to oncology innovation.</div></div><div class="sec-card"><span class="tag">Commodities</span><div class="sh">Brent at $108.82 and sevenfold higher Gulf transport costs keep the energy-security premium in focus.</div><div class="trade"><span class="tl">Trade</span>Use XLE or BNO for risk-sized energy-security exposure.</div></div></div></section>
+<div class="footer"><b>Sources:</b> Semafor Flagship (AI, oil, geopolitics) · Semafor Technology (AI strategy) · Semafor Business (AI financing) · Semafor DC (AI policy, geopolitics) · Semafor Africa (mining and fuel policy) · Axios Closer (earnings) · Axios Macro (oil and France) · Axios Energy (permitting and fuel) · Axios Markets (AI trade) · NYT DealBook (AI and energy) · Market data: Yahoo Finance &amp; FRED (Oct 22, 2026).<div class="disc">Portfolio Clippy Macro. Prepared for internal use. All market levels are indicative. This document does not constitute investment advice. Past performance is not indicative of future results.</div></div>
+</body></html>
